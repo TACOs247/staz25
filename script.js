@@ -6,12 +6,12 @@ function getTodayDate() {
 function saveMood(mood) {
   const date = getTodayDate();
   const comment = document.getElementById("comment")?.value || "";
+
   const moods = JSON.parse(localStorage.getItem("moods")) || {};
-  moods[date] = { mood, comment }; // zapisujemy buźkę i komentarz
+  moods[date] = { mood, comment }; // ZAPISZ OBIE RZECZY
   localStorage.setItem("moods", JSON.stringify(moods));
 
   document.getElementById("status").textContent = `Zapisano: ${mood}`;
-  document.getElementById("comment").value = "";
   showStats();
 }
 
@@ -19,6 +19,32 @@ function showToday() {
   const today = getTodayDate();
   const el = document.getElementById("today");
   if (el) el.textContent = `Dziś: ${today}`;
+}
+
+function showHistory() {
+  const container = document.getElementById("history");
+  const moods = JSON.parse(localStorage.getItem("moods")) || {};
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (Object.keys(moods).length === 0) {
+    container.textContent = "Brak zapisanych nastrojów.";
+    return;
+  }
+
+  const entries = Object.entries(moods).sort().reverse();
+  entries.forEach(([date, entry]) => {
+    const div = document.createElement("div");
+    div.className = "history-entry";
+    div.innerHTML = `
+      <strong>${date}</strong>: ${entry.mood}<br />
+      <input type="text" value="${entry.comment || ""}" data-date="${date}" class="comment-input" />
+      <button onclick="updateComment('${date}')">💾 Zapisz komentarz</button>
+      <button onclick="deleteEntry('${date}')">🗑️ Usuń</button>
+    `;
+    container.appendChild(div);
+  });
 }
 
 function updateComment(date) {
@@ -37,9 +63,8 @@ function deleteEntry(date) {
     if (confirm(`Czy na pewno chcesz usunąć wpis z ${date}?`)) {
       delete moods[date];
       localStorage.setItem("moods", JSON.stringify(moods));
-      showHistory(); // odśwież historię
-      showStats();   // odśwież statystyki
-      alert("Wpis usunięty.");
+      showHistory();
+      showStats();
     }
   }
 }
@@ -52,8 +77,7 @@ function showStats() {
   const counts = { '😊': 0, '😐': 0, '😞': 0 };
 
   Object.values(moods).forEach(entry => {
-    const mood = entry.mood;
-    if (counts[mood] !== undefined) counts[mood]++;
+    if (entry && counts[entry.mood] !== undefined) counts[entry.mood]++;
   });
 
   statsContainer.innerHTML = `
@@ -67,14 +91,12 @@ function renderCalendar() {
   const container = document.getElementById("calendar");
   if (!container) return;
 
-  container.innerHTML = ""; // wyczyść przed rysowaniem
-
   const moods = JSON.parse(localStorage.getItem("moods")) || {};
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  const firstDay = new Date(year, month, 1).getDay(); // 0-6
+  const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const calendarGrid = document.createElement("div");
@@ -92,7 +114,6 @@ function renderCalendar() {
     calendarGrid.appendChild(cell);
   });
 
-  // Puste komórki przed początkiem miesiąca
   for (let i = 0; i < firstDay; i++) {
     const emptyCell = document.createElement("div");
     calendarGrid.appendChild(emptyCell);
@@ -101,26 +122,24 @@ function renderCalendar() {
   for (let day = 1; day <= daysInMonth; day++) {
     const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const entry = moods[dateKey] || {};
-    const mood = entry.mood || "";
     const cell = document.createElement("div");
     cell.style.border = "1px solid #ccc";
     cell.style.padding = "10px";
     cell.style.borderRadius = "6px";
     cell.style.textAlign = "center";
     cell.style.background = "#fafafa";
-    cell.innerHTML = `<strong>${day}</strong><br>${mood}`;
+    cell.innerHTML = `<strong>${day}</strong><br>${entry.mood || ''}<br><small>${entry.comment || ''}</small>`;
     calendarGrid.appendChild(cell);
   }
 
   container.appendChild(calendarGrid);
 }
 
-// Uruchom odpowiednie funkcje w zależności od obecnych elementów
+// Automatyczne uruchamianie funkcji w zależności od strony
 document.addEventListener("DOMContentLoaded", () => {
   showToday();
   showHistory();
   showStats();
   renderCalendar();
 });
-
   
