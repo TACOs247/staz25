@@ -8,7 +8,6 @@
 </head>
 <body>
   <div class="container">
-    <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="emocje" class="header-image" />
     <h1>Jak się dziś czujesz?</h1>
     <p id="today"></p>
 
@@ -20,15 +19,19 @@
 
     <p id="status"></p>
 
-    <label for="comment">Komentarz:</label><br />
-    <textarea id="comment" rows="3" placeholder="Dlaczego tak się czujesz?"></textarea><br />
-    <button onclick="submitMood()">Wyślij</button>
+    <label for="comment">Komentarz:</label>
+    <textarea id="comment" rows="3" placeholder="Dlaczego tak się czujesz?"></textarea>
+    <button class="submit-btn" onclick="submitMood()">Wyślij</button>
 
-    <h2>📊 Statystyka nastrojów</h2>
-    <div id="stats"></div>
+    <div class="stats">
+      <h3>📊 Statystyka nastrojów:</h3>
+      <div id="stats"></div>
+    </div>
 
-    <a class="link" href="historia.html">📖 Historia</a>
-    <a class="link" href="kalendarz.html">📅 Kalendarz nastroju</a>
+    <div class="links">
+      <a href="historia.html">📖 Historia</a> | 
+      <a href="kalendarz.html">📅 Kalendarz nastroju</a>
+    </div>
   </div>
 
   <script src="script.js"></script>
