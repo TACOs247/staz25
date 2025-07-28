@@ -7,56 +7,55 @@ function getTodayDate() {
 
 function selectMood(mood) {
   selectedMood = mood;
-  document.getElementById("status").textContent = `Wybrano nastrój: ${mood}`;
+  document.getElementById("status").textContent = `Wybrano: ${mood}`;
 }
 
 function submitMood() {
   if (!selectedMood) {
-    alert("Najpierw wybierz nastrój!");
+    alert("Wybierz nastrój!");
     return;
   }
 
   const comment = document.getElementById("comment").value;
   const date = getTodayDate();
-  let moods = JSON.parse(localStorage.getItem("moods")) || {};
+  const moodData = JSON.parse(localStorage.getItem("moods") || "{}");
 
-  moods[date] = {
+  moodData[date] = {
     mood: selectedMood,
     comment: comment
   };
 
-  localStorage.setItem("moods", JSON.stringify(moods));
-  document.getElementById("status").textContent = `Zapisano: ${selectedMood}`;
+  localStorage.setItem("moods", JSON.stringify(moodData));
+  document.getElementById("status").textContent = `Zapisano nastrój: ${selectedMood}`;
   document.getElementById("comment").value = "";
   selectedMood = null;
-
   showStats();
 }
 
-function showToday() {
-  const today = getTodayDate();
-  const el = document.getElementById("today");
-  if (el) el.textContent = `Dziś: ${today}`;
-}
-
 function showStats() {
-  const statsContainer = document.getElementById("stats");
-  if (!statsContainer) return;
+  const stats = document.getElementById("stats");
+  if (!stats) return;
 
-  const moods = JSON.parse(localStorage.getItem("moods")) || {};
+  const moodData = JSON.parse(localStorage.getItem("moods") || "{}");
   const counts = { '😊': 0, '😐': 0, '😞': 0 };
 
-  Object.values(moods).forEach(entry => {
+  Object.values(moodData).forEach(entry => {
     if (entry && entry.mood && counts[entry.mood] !== undefined) {
       counts[entry.mood]++;
     }
   });
 
-  statsContainer.innerHTML = `
-    😊: ${counts['😊']} &nbsp;|&nbsp;
-    😐: ${counts['😐']} &nbsp;|&nbsp;
+  stats.innerHTML = `
+    😊: ${counts['😊']}<br>
+    😐: ${counts['😐']}<br>
     😞: ${counts['😞']}
   `;
+}
+
+function showToday() {
+  const today = getTodayDate();
+  const todayElement = document.getElementById("today");
+  if (todayElement) todayElement.textContent = `Dziś: ${today}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
