@@ -8,31 +8,28 @@
 </head>
 <body>
   <div class="container">
+    <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="emocje" class="header-image" />
     <h1>Jak się dziś czujesz?</h1>
     <p id="today"></p>
-
     <div class="mood-options">
-      <button onclick="selectMood('😊')">😊</button>
-      <button onclick="selectMood('😐')">😐</button>
-      <button onclick="selectMood('😞')">😞</button>
+      <button onclick="saveMood('😊')">😊</button>
+      <button onclick="saveMood('😐')">😐</button>
+      <button onclick="saveMood('😞')">😞</button>
     </div>
-
     <p id="status"></p>
+  <form id="mood-form">
+  <label for="comment">Komentarz:</label>
+  <textarea id="comment" rows="3" placeholder="Dlaczego tak się czujesz?"></textarea>
 
-    <label for="comment">Komentarz:</label>
-    <textarea id="comment" rows="3" placeholder="Dlaczego tak się czujesz?"></textarea>
-    <button class="submit-btn" onclick="submitMood()">Wyślij</button>
-
-    <div class="stats">
-      <h3>📊 Statystyka nastrojów:</h3>
-      <div id="stats"></div>
-    </div>
-
-    <div class="links">
-      <a href="historia.html">📖 Historia</a> | 
-      <a href="kalendarz.html">📅 Kalendarz nastroju</a>
-    </div>
+  <button type="submit">Wyślij</button>
+</form>
+    <h2>📊 Statystyka nastrojów</h2>
+    <div id="stats"></div>
+  
+    <a class="link" href="historia.html">📖 Historia</a>
+    <a class="link" href="kalendarz.html">📅 Kalendarz nastroju</a>
   </div>
+  
 
   <script src="script.js"></script>
 </body>
